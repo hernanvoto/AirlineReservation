@@ -33,6 +33,8 @@ git pull origin main
 --Change branch
 git checkout -b main
 
+ --allow-unrelated-histories
+ git pull https://github.com/hernanvoto/conqueringjava.git main  --allow-unrelated-histories
  
 The Spring MVC framework is, obviously, quite similar to a traditional MVC framework; however, it follows a “front controller” pattern, which means that all requests to the application go through one central dispatcher rather than to individual controllers.
  

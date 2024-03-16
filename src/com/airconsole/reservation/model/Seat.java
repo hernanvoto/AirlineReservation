@@ -3,6 +3,8 @@ package com.airconsole.reservation.model;
 import java.io.Serializable;
 
 public class Seat implements Serializable {
+	public static final char EMPTY_SEAT_ID = 'E';
+	public static final char OCCUPIED_SEAT_ID = 'X';
   
 	private static final long serialVersionUID = 6287922474113391944L;
 	

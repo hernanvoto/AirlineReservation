@@ -1,34 +1,23 @@
 package com.airconsole.reservation.controller;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+ 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 import com.airconsole.reservation.model.Passenger; 
-import com.airconsole.reservation.model.Seat; 
+import com.airconsole.reservation.model.Seat;
+import com.airconsole.reservation.util.ReservationUtil; 
 
 public class SeatVerifierHandler {
 	private Scanner scanner = new Scanner(System.in);
 	 
-	private static final int TOTAL_PLANE_ROWS = 8;
-	private static final int TOTAL_PLANE_COL = 5;
-	private static final String COMMON_FILE_DELIMITER = ",";
+	private static final int TOTAL_PLANE_ROWS = 8; 
 	
-	private static final String planeSeatReservationMapFilename = "planeSeatReservation.map";
-	private static final String passangerSeatReservationMapFilename = "passangerSeatReservation.map"; 
-	
-	// Create a 2D array (matrix)
-	private char[][] planeSeatReservationMap = new char[TOTAL_PLANE_ROWS][TOTAL_PLANE_COL];
+	// Create a 2D array (matrix) 
 	private Map<String, Passenger> passangerSeatReservationMap = new HashMap<String, Passenger>();
     
 	public SeatVerifierHandler() {
-		loadPlaneSeatReservationMap();
-		loadPassangerSeatReservationMap();
+		passangerSeatReservationMap = ReservationUtil.loadPassangerSeatReservationMap();
 	}
 	
 	public void verifySeat() {
@@ -53,7 +42,7 @@ public class SeatVerifierHandler {
 
 				rowInput = Integer.parseInt(userInput);
 			    
-			    if (rowInput >= 1 && rowInput <= TOTAL_PLANE_COL) {
+			    if (rowInput >= 1 && rowInput <= TOTAL_PLANE_ROWS) {
 			    	validUserSelection = true;
 			    } else {
 			    	System.out.println("Invalid Entry! valid range");
@@ -85,7 +74,7 @@ public class SeatVerifierHandler {
 		} 
 		
 		Seat seat = new Seat();
-		seat.setSeatRow(rowInput);
+		seat.setSeatRow(rowInput); 
 		seat.setSeatColumnLetter(colInput);
 	    
 		if (passangerSeatReservationMap.containsKey(seat.asHashMapKey())) {
@@ -105,41 +94,5 @@ public class SeatVerifierHandler {
 	    scanner.close();	        
 	}
 	
-	private void loadPlaneSeatReservationMap() {
-    	
-    	try (BufferedReader reader = new BufferedReader(new FileReader(planeSeatReservationMapFilename))) {
-		 
-            // Read lines from the file and parse matrix elements
-            String line;
-            int row = 0;
-             
-            while ((line = reader.readLine()) != null) {
-            	String[] elements = line.trim().split(COMMON_FILE_DELIMITER);
-                
-                for (int col = 0; col < elements.length; col++) {
-                	planeSeatReservationMap[row][col] = elements[col].charAt(0);
-                }
-                row++;
-            }
-		} catch (IOException | NumberFormatException e) {
-			System.out.println("Error loading planeSeatReservation file: " + e.getMessage());
-			System.exit(1);
-		}
-    }
 	
-	private void loadPassangerSeatReservationMap() {
-	
-		if (FileExistenceChecker.check(passangerSeatReservationMapFilename)) {
-			try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(passangerSeatReservationMapFilename))) {
-				
-				passangerSeatReservationMap = (Map<String, Passenger>) inputStream.readObject();
-				
-			} catch (IOException | ClassNotFoundException e) {
-				System.err.println("Error loading data from file: " + e.getMessage());
-			}
-		} else {
-			System.err.println("Error loading data from file: " + passangerSeatReservationMapFilename);
-			System.exit(1);
-		}
-	}
 }

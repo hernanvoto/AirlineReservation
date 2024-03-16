@@ -13,21 +13,14 @@ import java.util.Scanner;
 
 import com.airconsole.reservation.model.Passenger;
 import com.airconsole.reservation.model.Reservation;
-import com.airconsole.reservation.model.Seat; 
+import com.airconsole.reservation.model.Seat;
+import com.airconsole.reservation.util.ReservationUtil; 
 
 /**
  * this class may be to long too complex too procedural
  */
 public class ReservationHandler {
 	
-	private static final int BUSINESS_CLASS_FIRST_PLANE_ROW = 1;
-	private static final int BUSINESS_CLASS_LAST_PLANE_ROW = 5;
-	private static final int ECONOMY_CLASS_FIRST_PLANE_ROW = 6;
-	
-	private static final char EMPTY_SEAT_ID = 'E';
-	private static final char OCCUPIED_SEAT_ID = 'X';
-	private static final int TOTAL_PLANE_ROWS = 8;
-	private static final int TOTAL_PLANE_COL = 5;
 	private static final String COMMON_FILE_DELIMITER = ",";
 	
 	private static final String planeSeatReservationMapFilename = "planeSeatReservation.map";
@@ -36,8 +29,8 @@ public class ReservationHandler {
 	private static final Scanner scanner = new Scanner(System.in);
 	
 	// Create a 2D array (matrix)
-	private char[][] planeSeatReservationMap = new char[TOTAL_PLANE_ROWS][TOTAL_PLANE_COL];
-	private Map<String, Passenger> passengerSeatReservationMap = new HashMap<String, Passenger>();
+	private char[][] planeSeatReservationMap;
+	private Map<String, Passenger> passengerSeatReservationMap;
     
 	/**
 	 * initialises the class by loading existing reservations if any.
@@ -45,15 +38,9 @@ public class ReservationHandler {
 	public ReservationHandler() {
 		
 		//initialize Reservation Map. IF not found it either was removed, lost or is the first time the code runs.
-		if (!FileExistenceChecker.check(planeSeatReservationMapFilename)) {
-		    for (int row = 0; row < TOTAL_PLANE_ROWS; row++) {
-		        for (int seat = 0; seat < TOTAL_PLANE_COL; seat++) {
-		        	planeSeatReservationMap[row][seat] = EMPTY_SEAT_ID;  
-		        }
-		    }
-		} else { //load existing reservation
-			loadReservationMap();
-		}
+		planeSeatReservationMap = ReservationUtil.loadPlaneSeatReservationMap(); 
+    	passengerSeatReservationMap = ReservationUtil.loadPassangerSeatReservationMap();
+		    
 	}
 	
 	public void reserveSeat() throws IOException{
@@ -107,10 +94,10 @@ public class ReservationHandler {
     	
     	switch (selectedClass) {
         	case BUSINESS_CLASS:
-    			startingPlaneRowAccordingToClass = BUSINESS_CLASS_FIRST_PLANE_ROW;
+    			startingPlaneRowAccordingToClass = Reservation.BUSINESS_CLASS_FIRST_PLANE_ROW;
     		break;
         	case ECONOMY_CLASS:
-    			startingPlaneRowAccordingToClass = ECONOMY_CLASS_FIRST_PLANE_ROW;
+    			startingPlaneRowAccordingToClass = Reservation.ECONOMY_CLASS_FIRST_PLANE_ROW;
     		break;
     	}
     	
@@ -131,7 +118,7 @@ public class ReservationHandler {
 	
 					rowInput = Integer.parseInt(userInput);
 				    
-				    if (rowInput >= startingPlaneRowAccordingToClass && rowInput <= TOTAL_PLANE_ROWS) {
+				    if (rowInput >= startingPlaneRowAccordingToClass && rowInput <= Reservation.TOTAL_PLANE_ROWS) {
 				    	validUserSelection = true;
 				    } else {
 				    	System.out.println("Invalid Class Entry!");
@@ -220,7 +207,7 @@ public class ReservationHandler {
 				res.setPassenger(passenger);
 		    		    			    	
 				//save seat
-				planeSeatReservationMap[res.getSeat().getSeatRowNumberForStorage()][res.getSeat().getSeatColumnNumberForStorage()] = OCCUPIED_SEAT_ID;
+				planeSeatReservationMap[res.getSeat().getSeatRowNumberForStorage()][res.getSeat().getSeatColumnNumberForStorage()] = Seat.OCCUPIED_SEAT_ID;
 				passengerSeatReservationMap.put(res.getSeat().asHashMapKey(), res.getPassenger());
 				
 				storeReservation();
@@ -235,7 +222,7 @@ public class ReservationHandler {
     
     private boolean isSeatAvailable(Reservation res) {
     	
-    	if (planeSeatReservationMap[res.getSeat().getSeatRowNumberForStorage()][res.getSeat().getSeatColumnNumberForStorage()] == OCCUPIED_SEAT_ID) {
+    	if (planeSeatReservationMap[res.getSeat().getSeatRowNumberForStorage()][res.getSeat().getSeatColumnNumberForStorage()] == Seat.OCCUPIED_SEAT_ID) {
     	    return false;
     	}
 
@@ -255,28 +242,28 @@ public class ReservationHandler {
 	   			     + "**      Business Class       **\r\n"
 	   				 + "*******************************\r\n");
 	    		
-	    		startingPlaneRowAccordingToClass = BUSINESS_CLASS_FIRST_PLANE_ROW;
+	    		startingPlaneRowAccordingToClass = Reservation.BUSINESS_CLASS_FIRST_PLANE_ROW;
     		} else {
     			System.out.println("\r\n*******************************\r\n"
    	   			     + "**      Economy Class       **\r\n"
    	   				 + "*******************************\r\n");
     			
-    			startingPlaneRowAccordingToClass = ECONOMY_CLASS_FIRST_PLANE_ROW;    	    	
+    			startingPlaneRowAccordingToClass = Reservation.ECONOMY_CLASS_FIRST_PLANE_ROW;    	    	
     		}
     		
     	    //print columns
     		System.out.println("\t" + "A" + "\t" + "B" + "\t" + "C" + "\t" + "D" + "\t" + "E" + "\t");
 	    	// Loop through each row
-	    	for (int row = startingPlaneRowAccordingToClass-1; row < TOTAL_PLANE_ROWS; row++) {
+	    	for (int row = startingPlaneRowAccordingToClass-1; row < Reservation.TOTAL_PLANE_ROWS; row++) {
 
-	    		if (selectedClass == Reservation.PlaneClass.BUSINESS_CLASS && row == BUSINESS_CLASS_LAST_PLANE_ROW) {
+	    		if (selectedClass == Reservation.PlaneClass.BUSINESS_CLASS && row == Reservation.BUSINESS_CLASS_LAST_PLANE_ROW) {
 	    			break;
 	    		} else {
 	    			
 		    		// Print Row Numbers
 		    		System.out.print(row + 1);
 	    			
-		    	    for (int col = 0; col  < TOTAL_PLANE_COL; col ++) {
+		    	    for (int col = 0; col  < Reservation.TOTAL_PLANE_COL; col ++) {
 		    	        // Print the current element followed by a space
 		    	        System.out.print( "\t" + planeSeatReservationMap[row][col]);
 		    	    }
@@ -286,33 +273,10 @@ public class ReservationHandler {
 	    	}
     	}
     }
-    
-    //since there is only one plane one route one time, i kept this simple
-	//Not sure how to reuse this one
-    private void loadReservationMap() {
-    	
-    	try (BufferedReader reader = new BufferedReader(new FileReader(planeSeatReservationMapFilename))) {
-		 
-            // Read lines from the file and parse matrix elements
-            String line;
-            int row = 0;
-             
-            while ((line = reader.readLine()) != null) {
-            	String[] elements = line.trim().split(COMMON_FILE_DELIMITER);
-                
-                for (int col = 0; col < elements.length; col++) {
-                	planeSeatReservationMap[row][col] = elements[col].charAt(0);
-                }
-                row++;
-            }
-		} catch (IOException | NumberFormatException e) {
-			System.out.println("Error loading file: " + e.getMessage());
-			System.exit(1);
-		}
-    }
 
 	//not sure where this should go. 
 	public void storeReservation() throws IOException{
+		
 		// Write the planeSeatReservationMap to a text file        
 		BufferedWriter writer = new BufferedWriter(new FileWriter(planeSeatReservationMapFilename));
         
