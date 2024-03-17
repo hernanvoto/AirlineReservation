@@ -1,0 +1,44 @@
+java -cp E:\Documents\Programming\eclipse-workspace\Reservation\bin com.airconsole.reservation.ReservationMain
+
+mvn spring-boot:run
+
+
+LAMBDA Functions
+
+E:\Documents\Programming\rest-api-stratavote> sam build
+sam build
+ 
+sam deploy --guided
+ 
+aws apigateway get-resources --rest-api-id swjv04wt0j
+aws lambda invoke --function-name rest-api-stratavote-MyLambdaFunction-8zwmX2kGdG5H output.json
+
+git init
+git remote add origin https://github.com/hernanvoto/reservation.git
+--Use the git add command to stage the files you want to commit. For example, to stage all files, use:
+git add .
+git add -u
+git commit -m "Initial commit"
+
+--to update github after commit
+git push -u origin main
+
+-- get from git git fetch: Fetches changes from the remote repository to your local repository.
+git fetch origin
+
+--Use git pull when you want to quickly update your local repository and working directory with changes from the remote repository and you're ready to incorporate those changes into your current branch.
+git pull
+git pull origin main
+
+--Change branch
+git checkout -b main
+
+ --allow-unrelated-histories
+ git pull https://github.com/hernanvoto/conqueringjava.git main  --allow-unrelated-histories
+ 
+The Spring MVC framework is, obviously, quite similar to a traditional MVC framework; however, it follows a “front controller” pattern, which means that all requests to the application go through one central dispatcher rather than to individual controllers.
+ 
+git clone https://github.com/hernanvoto/reservation.git
+
+If you're working on a specific branch and want to merge the changes from the remote into it, you can use the git merge
+git merge origin/main
