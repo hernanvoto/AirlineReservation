@@ -24,8 +24,8 @@ hs_err_pid*
 replay_pid*
 
 # file
-*.map
+*.map 
 
 .settings
 .classpath
-.project
+.project 

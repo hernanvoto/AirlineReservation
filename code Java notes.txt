@@ -35,10 +35,17 @@ git checkout -b main
 
  --allow-unrelated-histories
  git pull https://github.com/hernanvoto/conqueringjava.git main  --allow-unrelated-histories
+
+git clone https://github.com/hernanvoto/reservation.git
+
+-- If you're working on a specific branch and want to merge the changes from the remote into it, you can use the git merge
+git merge origin/main
+
+
+
+
+
+
  
 The Spring MVC framework is, obviously, quite similar to a traditional MVC framework; however, it follows a “front controller” pattern, which means that all requests to the application go through one central dispatcher rather than to individual controllers.
  
-git clone https://github.com/hernanvoto/reservation.git
-
-If you're working on a specific branch and want to merge the changes from the remote into it, you can use the git merge
-git merge origin/main
